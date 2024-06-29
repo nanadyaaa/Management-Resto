@@ -1,0 +1,86 @@
+{
+  "menu": [
+    {
+      "id": "1",
+      "name": "Bakso Urat",
+      "description": "Makanan khas Indonesia yang terbuat dari daging sapi.",
+      "category": "Makanan",
+      "price": "10.000",
+      "image": "img/images.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Jus Buah",
+      "description": "Minuman segar yang terbuat dari berbagai macam buah.",
+      "category": "Minuman",
+      "price": "10.000",
+      "image": "img/jus.jpeg"
+    },
+    {
+      "id": "505b",
+      "name": "Sapo Tahu",
+      "description": "Makanan sedap sesuai selera kalian.",
+      "category": "Makanan",
+      "price": "35000",
+      "image": "img/sapotahu.png"
+    },
+    {
+      "id": "91a8",
+      "name": "Blue Ocean",
+      "description": "Minuman segar yang ditambah soda.",
+      "category": "Minuman",
+      "price": "20000",
+      "image": "img/blue.png"
+    },
+    {
+      "id": "ea69",
+      "name": "Nasi Goreng",
+      "description": "Nasi Goreng special di tambah toping yang lengkap",
+      "category": "Makanan",
+      "price": "15000",
+      "image": "img/nasi.jpg"
+    },
+    {
+      "id": "9498",
+      "name": "Mie Ayam",
+      "description": "Makanan sedap sesuai selera kalian di tambah toping ayam yang melimpah.",
+      "category": "Makanan",
+      "price": "12000",
+      "image": "img/mieayam.jpg"
+    },
+    {
+      "id": "27b2",
+      "name": "Melon Juice",
+      "description": "Jus melon yang segar tanpa pemanis buatan.",
+      "category": "Minuman",
+      "price": "10000",
+      "image": "img/melon.jpg"
+    },
+    {
+      "id": "001f",
+      "name": "Sate Maranggi",
+      "description": "Dari daging Pilihan",
+      "category": "Makanan",
+      "price": "45000",
+      "image": "blob:http://127.0.0.1:5503/65e99c20-efd9-47f9-bed4-12fb4d3b8496"
+    },
+    {
+      "id": "7570",
+      "name": "Soto Betawi",
+      "description": "Soto yang creamy dengan santan yang begitu gurih",
+      "category": "Makanan",
+      "price": "20000",
+      "image": "blob:http://127.0.0.1:5503/cb075b06-4ae7-4a64-abc3-f64656c109e3"
+    }
+  ],
+  "category": [
+    {
+      "id": "4706",
+      "name": "Makanan"
+    },
+    {
+      "id": "c3e0",
+      "name": "Minuman"
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="./output.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <title>Fruit Shop</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #e1e5eb;
+      padding: 10px 20px;
+      box-shadow: 0 4px 6px rgba(114, 102, 102, 0.1);
+      color: #fff;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .navbar a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar a:hover {
+      background-color: #0056b3;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+
+    .form-group input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      border-color: #0056b3;
+    }
+
+    .form-group button {
+      background-color: #001f3f;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+    }
+
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #001f3f;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000000;
+      padding: 10px 20px;
+      box-shadow: 0 4px 6px rgba(114, 102, 102, 0.1);
+      color: #fff;
+      margin-top: 50px; /* Penambahan margin atas untuk jarak */
+    }
+
+    .section-header {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="navbar">
+    <div>
+      <a href="https://politekniklp3i-tasikmalaya.ac.id/">
+        <img src="./img/logo-lp3i.png" class="w-44">
+      </a>
+    </div>
+  </div>
+
+  <section class="section-header">
+    <div class="flex flex-col md:flex-row justify-center items-center">
+      <div class="w-full md:w-7/12 text-center space-y-2 p-5">
+        <h1 class="font-bold" style="font-size: 25px;">
+          <span class="text-black">Menu Restoran</span>
+        </h1>
+        <h2 class="text-sm">
+          <span class="text-black">Berikut ini adalah beberapa menu yang tersedia :</span>
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="">
+    <div class="flex items-center px-10 md:px-20">
+      <div class="space-y-3 w-full">
+        <div class="grid md:grid-cols-4 grid-cols-1 gap-3" id="menu-container">
+          <!-- Data menu akan dimasukkan di sini -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2024 Materi Kuliah Front-end Development by Nadya Putri | Politeknik LP3I Tasikmalaya.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch('http://localhost:3000/menu')
+        .then(response => response.json())
+        .then(data => {
+          const menuContainer = document.getElementById('menu-container');
+          menuContainer.innerHTML = data.map(item => `
+            <div class="flex flex-col gap-5 border border-gray-200 px-10 py-5 space-y-3 rounded-lg">
+              <img class="rounded-lg" src="${item.image}" alt="${item.name}">
+              <div>
+                <h5 class="font-medium">${item.name}</h5>
+                <p class="text-gray-600 text-sm">${item.description}</p>
+                <br>
+                <span style="background-color: #c5e1f3; color: rgb(4, 82, 146); padding: 4px 10px; border-radius: 8px; font-size: 12px;">
+                  ${item.category}
+                </span>
+                <br>
+                <br>
+                <p class="font-bold">Rp.${item.price}</p>
+              </div>
+            </div>
+          `).join('');
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    });
+  </script>
+</body>
+
+</html>

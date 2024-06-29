@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333; /* Updated to grey background */
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #555; /* Darker grey on hover */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f0f0; /* Light grey background */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333; /* Dark text color */
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #555; /* Darker grey on focus */
+        }
+
+        .form-group button {
+            background-color: #333; /* Dark grey button */
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-group button:hover {
+            background-color: #555; /* Darker grey on hover */
+        }
+
+        table {
+            max-width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin: 0 auto;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #333; /* Dark grey header */
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .table-container table {
+            width: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container th,
+        .table-container td {
+            text-align: center;
+        }
+
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h1>Dashboard</h1>
+        <div>
+            <a href="dashboard.html">Home</a>
+            <a href="index.html">Showcase</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="form-group">
+            <label for="name">Food Name:</label>
+            <input type="text" id="name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="description">Food description:</label>
+            <input type="text" id="description" placeholder="Enter description">
+        </div>
+        <div class="form-group">
+            <label for="price">Food Price:</label>
+            <input type="number" id="price" placeholder="Enter price">
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category"></select>
+        </div>
+        <div class="form-group">
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" accept="image/*">
+        </div>
+        <div class="form-group">
+            <button type="button" id="trigger" onclick="saveMenu()">Save</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Food description</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Image</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="result">
+                    <tr>
+                        <td colspan="6" align="center">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="alert" class="alert" style="display: none;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const Getmenu = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/menu');
+                if (response.status === 200) {
+                    const menus = response.data;
+                    let bucket = "";
+                    menus.forEach((menu, index) => {
+                        bucket += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${menu.name}</td>
+                                <td>${menu.description}</td>
+                                <td>${menu.category}</td>
+                                <td>Rp.${menu.price}</td>
+                                <td><img src="${menu.image}" alt="${menu.name}" width="50"></td>
+                                <td class="action-buttons">
+                                    <button class="edit-btn" onclick="Editmenu('${menu.id}')">Edit</button>
+                                    <button class="delete-btn" onclick="Deletemenu('${menu.id}')">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    document.getElementById('result').innerHTML = bucket;
+                } else {
+                    showAlert('Gagal mengambil data', 'danger');
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert('Maaf server sedang offline', 'danger');
+            }
+        };
+
+        const Deletemenu = async (id) => {
+            const confirmed = confirm('Apakah ini akan dihapus?');
+            if (confirmed) {
+                try {
+                    const response = await axios.delete(`http://localhost:3000/menu/${id}`);
+                    if (response.status === 200) {
+                        Getmenu();
+                        showAlert('Barang berhasil dihapus', 'success');
+                    } else {
+                        showAlert('Gagal menghapus barang', 'danger');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    showAlert('Gagal menghapus barang', 'danger');
+                }
+            }
+        };
+
+        const saveMenu = async()=> {
+            const nameVal = document.getElementById('name').value;
+            const descriptionVal = document.getElementById('description').value;
+            const categoryVal = document.getElementById('category').value;
+            const priceVal = document.getElementById('price').value;
+            const imageFile = document.getElementById('image').files[0];
+            await axios.post('http://localhost:3000/menu',{
+                name:nameVal,
+                description:descriptionVal,
+                category:categoryVal,
+                price:priceVal,
+                image:URL.createObjectURL(imageFile),
+            })
+            .then((response)=>{
+                console.log(response);
+                alert('Itemn Saved')
+                Getmenu()
+            })
+            .catch(error)
+        }
+
+        // const Savemenu = async () => {
+        //     const nameVal = document.getElementById('name').value;
+        //     const categoryVal = document.getElementById('category').value;
+        //     const priceVal = document.getElementById('price').value;
+        //     const imageFile = document.getElementById('image').files[0];
+
+        //     if (!nameVal || !priceVal || !categoryVal || !imageFile) {
+        //         showAlert('Semua field wajib diisi', 'danger');
+        //         return;
+        //     }
+
+        //     const formData = new FormData();
+        //     formData.append('name', nameVal);
+        //     formData.append('price', priceVal);
+        //     formData.append('category', categoryVal);
+        //     formData.append('image', imageFile);
+
+        //     try {
+        //         const response = await axios.post('http://localhost:3000/menu', formData, {
+        //             headers: {
+        //                 'Content-Type': 'multipart/form-data',
+        //             },
+        //         });
+        //         if (response.status === 201) {
+        //             showAlert('Barang berhasil disimpan', 'success');
+        //             Getmenu();
+        //         } else {
+        //             showAlert('Gagal menyimpan barang', 'danger');
+        //         }
+        //     } catch (error) {
+        //         console.error(error);
+        //         showAlert('Maaf server sedang offline atau terjadi kesalahan', 'danger');
+        //     }
+        // };
+
+        const Editmenu = async (id) => {
+            try {
+                const response = await axios.get(`http://localhost:3000/menu/${id}`);
+                if (response.status === 200) {
+                    const menu = response.data;
+                    document.getElementById('name').value = menu.name;
+                    document.getElementById('description').value = menu.description;
+                    document.getElementById('category').value = menu.category;
+                    document.getElementById('price').value = menu.price;
+                    document.getElementById('trigger').innerText = "Update";
+                    document.getElementById('trigger').setAttribute('onclick', `Updatemenu('${id}')`);
+                } else {
+                    showAlert('Gagal memuat data barang', 'danger');
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert('Gagal memuat data barang', 'danger');
+            }
+        };
+
+        const Updatemenu = async (id) => {
+            const nameVal = document.getElementById('name').value;
+            const descriptionVal = document.getElementById('description').value;
+            const categoryVal = document.getElementById('category').value;
+            const priceVal = document.getElementById('price').value;
+            const imageFile = document.getElementById('image').files[0];
+
+            if (!nameVal || !descriptionVal || !categoryVal || !priceVal || !imageFile) {
+                showAlert('Semua field wajib diisi', 'danger');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('name', nameVal);
+            formData.append('description',descriptionVal);
+            formData.append('category', categoryVal);
+            formData.append('price', priceVal);
+            formData.append('image', imageFile);
+
+            try {
+                const response = await axios.patch(`http://localhost:3000/menu/${id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                if (response.status === 200) {
+                    showAlert('Barang berhasil diupdate', 'success');
+                    document.getElementById('name').value = '';
+                    document.getElementById('description').value = '';
+                    document.getElementById('category').value = '';
+                    document.getElementById('price').value = '';
+                    document.getElementById('image').value = '';
+                    document.getElementById('trigger').innerText = "Save";
+                    document.getElementById('trigger').setAttribute('onclick', `Savemenu()`);
+                    Getmenu();
+                } else {
+                    showAlert('Gagal mengupdate barang', 'danger');
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert('Gagal mengupdate barang', 'danger');
+            }
+        };
+
+        const GetCategory = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/category');
+                if (response.status === 200) {
+                    const categories = response.data;
+                    let options = "";
+                    categories.forEach(category => {
+                        options += `<option value="${category.name}">${category.name}</option>`;
+                    });
+                    document.getElementById('category').innerHTML = options;
+                } else {
+                    showAlert('Gagal memuat kategori', 'danger');
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert('Maaf server sedang offline', 'danger');
+            }
+        };
+
+        const showAlert = (message, type) => {
+            const alert = document.getElementById('alert');
+            alert.innerText = message;
+            alert.style.display = 'block';
+            alert.className = `alert alert-${type}`;
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Getmenu();
+            GetCategory();
+        });
+    </script>
+</body>
+
+</html>
